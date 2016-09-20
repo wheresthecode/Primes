@@ -1,0 +1,13 @@
+
+First implementation:
+Remaining Time: 0
+Primes Found: 160230
+Last Prime Found: 2163911
+Press any key to continue . . .
+
+
+Increment by 2 instead of by 1. Skip all evens
+Remaining Time: 0
+Primes Found: 162087
+Last Prime Found: 2191243
+Press any key to continue . . .
