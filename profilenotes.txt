@@ -11,3 +11,36 @@ Remaining Time: 0
 Primes Found: 162087
 Last Prime Found: 2191243
 Press any key to continue . . .
+
+// Using longs
+Remaining Time: 0
+Primes Found: 122868
+Last Prime Found: 1624699
+Press any key to continue . . .
+
+// Using a window instead of a bunch of divides. Is it correct though. Need to make a test
+Remaining Time: 0
+Primes Found: 754600
+Last Prime Found: 11456509
+Press any key to continue . . .
+
+// 10 * 1024 sized window
+Remaining Time: 0
+Primes Found: 2278455
+Last Prime Found: 37314509
+Press any key to continue . . .
+
+
+// 100 * 1024 window
+Remaining Time: 0
+Primes Found: 7228261
+Last Prime Found: 127385591
+Press any key to continue . . .
+
+// 1024 * 1024 window
+// took 30 seconds to generate the first window.
+// looks like the larger the window the better.
+Remaining Time: 0
+Primes Found: 16487020
+Last Prime Found: 306184189
+Press any key to continue . . .

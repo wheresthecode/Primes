@@ -1,89 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 
 namespace Primes
 {
-	class PrimeGenerator
+	internal class Program
 	{
-		public long PrimesFound { get { return mPrimeCount; } }
-		public long MostRecentyPrime { get { return mLastPrime; } }
+		private static string mLastConsoleOutput;
+		private const int RunDuration = 60;
 
-		public List<int> GetPrimeList() { return new List<int>(); }
-
-		public void Begin()
+		private static int GetRemainingTime(int duration, Stopwatch stopwatch)
 		{
-			mThread = new Thread(new ThreadStart(GenFunction));
-			mThread.Start();
-		}
-		public void End()
-		{
-			mShouldExit = true; 
-			mThread.Join();
+			return Math.Max(0, ((duration * 1000) - (int)stopwatch.ElapsedMilliseconds));
 		}
 
-		private void GenFunction()
+		private static void UpdateOutput(IPrimeGenerator generator, int timeRemaining)
 		{
-			mPrimes = new List<long>();
-			mPrimes.Add(2);
-			mPrimeCount = 0;
-			mLastPrime = 2;
-			long checkNum = 3;
-			while(!mShouldExit)
-			{
-				bool isPrime = true;
-				foreach (long prime in mPrimes )
-				{
-					if( (checkNum % prime) == 0 )
-					{
-						isPrime = false;
-						break;
-					}
-				}
-				if( isPrime )
-				{
-					mPrimeCount = mPrimeCount + 1;
-					mLastPrime = checkNum;
-                    mPrimes.Add(checkNum);
-					mPrimeCount = 0;
-                }
-				checkNum+=2;
-			}
-		}
-
-		private long mPrimeCount;
-		private long mLastPrime;
-		private List<long> mPrimes = new List<long>();
-		private Thread mThread;
-		private volatile bool mShouldExit = false;
-	}
-
-	class Program
-	{
-		static string mLastConsoleOutput;
-		static Stopwatch mStopwatch;
-		static int mRunDuration = 60;
-		static PrimeGenerator mGenerator = new PrimeGenerator();
-
-		static int GetRemainingTime()
-		{
-			return Math.Max(0, ((mRunDuration*1000) - (int)mStopwatch.ElapsedMilliseconds) );
-		}
-
-		static void UpdateOutput()
-		{
-			
 			StringBuilder builder = new StringBuilder();
-			builder.AppendFormat("Remaining Time: {0}\n", GetRemainingTime()/1000);
-			builder.AppendFormat("Primes Found: {0}\n", mGenerator.PrimesFound);
-			builder.AppendFormat("Last Prime Found: {0}", mGenerator.MostRecentyPrime);
+			builder.AppendFormat("Remaining Time: {0}\n", timeRemaining / 1000);
+			builder.AppendFormat("Primes Found: {0}\n", generator.PrimesFound);
+			builder.AppendFormat("Last Prime Found: {0}", generator.LastPrime);
 
 			string thisString = builder.ToString();
-            if (mLastConsoleOutput != thisString)
+			if (mLastConsoleOutput != thisString)
 			{
 				Console.Clear();
 				Console.WriteLine(thisString);
@@ -91,21 +32,44 @@ namespace Primes
 			}
 		}
 
-		static void Main(string[] args)
+		private static void TestGenerator(IPrimeGenerator generator, int testSize)
 		{
-			mGenerator = new PrimeGenerator();
-			mStopwatch = new Stopwatch();
-			mStopwatch.Start();
-			mGenerator.Begin();
+			List<long> correctPrimes = PrimeGeneratorUtility.GetPrimes(testSize);
 
-			while (GetRemainingTime() > 0)
+			generator.Begin();
+			while (generator.LastPrime < testSize)
 			{
 				Thread.Sleep(33);
-				UpdateOutput();
 			}
-			mGenerator.End();
+			generator.End();
 
-			UpdateOutput();
+			Debug.Assert(correctPrimes.Count <= generator.Primes.Count);
+			for (int i = 0; i < correctPrimes.Count; i++)
+			{
+				Debug.Assert(correctPrimes[i] == generator.Primes[i]);
+			}
+		}
+
+		private static void Main(string[] args)
+		{
+			//TestGenerator(new PrimeGenerator(), 100 * 1024);
+			//TestGenerator(new PrimeGenerator2(), 100 * 1024);
+
+			IPrimeGenerator generator = new PrimeGeneratorWindowed(10 * 1024);
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			generator.Begin();
+
+			int duration = 60;
+			while (GetRemainingTime(duration, stopwatch) > 0)
+			{
+
+				Thread.Sleep(33);
+				UpdateOutput(generator, GetRemainingTime(duration, stopwatch));
+			}
+			generator.End();
+
+			UpdateOutput(generator, GetRemainingTime(duration, stopwatch));
 		}
 	}
 }
