@@ -34,8 +34,8 @@ namespace Primes
 
 		private static void TestGenerator(IPrimeGenerator generator, int testSize)
 		{
-			List<long> correctPrimes = PrimeGeneratorUtility.GetPrimes(testSize);
-
+			List<long> correctPrimes = PrimeGeneratorUtility.GetPrimesSimple(testSize);
+			
 			generator.Begin();
 			while (generator.LastPrime < testSize)
 			{
@@ -53,9 +53,9 @@ namespace Primes
 		private static void Main(string[] args)
 		{
 			//TestGenerator(new PrimeGenerator(), 100 * 1024);
-			//TestGenerator(new PrimeGenerator2(), 100 * 1024);
+			//TestGenerator(new PrimeGeneratorWindowed(10*1024), 1024 * 1024);
 
-			IPrimeGenerator generator = new PrimeGeneratorWindowed(10 * 1024);
+			IPrimeGenerator generator = new PrimeGeneratorWindowed(1024 * 1024);
 			Stopwatch stopwatch = new Stopwatch();
 			stopwatch.Start();
 			generator.Begin();

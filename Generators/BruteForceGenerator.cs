@@ -15,6 +15,7 @@ namespace Primes
 
 		public void Begin()
 		{
+			mShouldExit = false;
 			mThread = new Thread(new ThreadStart(GenFunction));
 			mThread.Start();
 		}

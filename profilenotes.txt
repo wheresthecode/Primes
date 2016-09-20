@@ -44,3 +44,9 @@ Remaining Time: 0
 Primes Found: 16487020
 Last Prime Found: 306184189
 Press any key to continue . . .
+
+
+Remaining Time: 0
+Primes Found: 21962329
+Last Prime Found: 414187471
+Press any key to continue . . .
