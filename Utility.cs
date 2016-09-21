@@ -60,7 +60,7 @@ namespace Primes
 				}
 
 				int count = Math.Min( n - windowOffset, windowSize);
-				for (int i = 0; i < windowSize; i++)
+				for (int i = 0; i < count; i++)
 				{
 					if (!window[i])
 					{
