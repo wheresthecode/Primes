@@ -30,6 +30,7 @@ namespace Primes
 			// TODO: 10 is arbitrary would be better calculate an appropriate window inside the function
 			// Could also consider using a variable sized window that grows as the windowOffset increases
 			mPrimes = PrimeGeneratorUtility.GetPrimesWindowed(mWindowsSize, mWindowsSize/10);
+			mPrimeCount = mPrimes.Count;
             while (!mShouldExit)
 			{
 				int maxPrime = (int)Math.Sqrt(windowOffset + mWindowsSize)+1;
